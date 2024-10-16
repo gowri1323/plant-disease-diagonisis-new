@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="styles.css"> <!-- External stylesheet -->
+    <style>
+        body {
+            background-color: #eef5e9;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #28a745;
+        }
+
+        .cart-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .cart-item h3 {
+            color: #28a745;
+            font-size: 18px;
+        }
+
+        .cart-item .price {
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .checkout-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .checkout-button:hover {
+            background-color: #218838;
+        }
+        .button-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #57ae61; /* Button background color */
+    color: white; /* Text color */
+    text-align: center;
+    text-decoration: none;
+    border-radius: 25px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+    border: none;
+    margin-top: 20px;
+}
+    .button-link:hover{
+        background-color:#acc8b4;
+        cursor:pointer
+    }
+    </style>
+</head>
+<body>
+
+<h1>Your Cart</h1>
+
+<div class="cart-container" id="cartContainer">
+    <!-- Cart items will be dynamically inserted here -->
+</div>
+<center>
+<button class="checkout-button" onclick="checkout()">Proceed to Checkout</button>
+
+
+<div class="back-link">
+    <a href="cart.html"class="button-link">Back to store</a>
+</div>
+</div>
+</center>
+<script>
+    // Function to load cart items from localStorage and display them
+    function loadCartItems() {
+        // Sample data - you can change the product details as needed
+        const sampleCartItems = [
+            {
+                name: "DAP Fertilizer And Potash Fertilizer (MOP)",
+                price: 189.00,
+                image: "https://via.placeholder.com/100" // Placeholder image URL
+            },
+            {
+                name: "Phosphate Solubilizing Bacteria Bio Fertilizer",
+                price: 499.00,
+                image: "https://via.placeholder.com/100" // Placeholder image URL
+            },
+            {
+                name: "Organic Neem Cake Fertilizer",
+                price: 350.00,
+                image: "https://via.placeholder.com/100" // Placeholder image URL
+            }
+        ];
+
+        // Store sample data in localStorage for the first time
+        if (!localStorage.getItem('cart')) {
+            localStorage.setItem('cart', JSON.stringify(sampleCartItems));
+        }
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartContainer = document.getElementById('cartContainer');
+        
+        if (cart.length === 0) {
+            cartContainer.innerHTML = '<p>Your cart is empty.</p>';
+        } else {
+            cart.forEach(item => {
+                const cartItem = `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <h3>${item.name}</h3>
+                        <div class="price">Rs. ${item.price.toFixed(2)}</div>
+                    </div>
+                `;
+                cartContainer.innerHTML += cartItem;
+            });
+        }
+    }
+
+    // Call the function to load cart items on page load
+    window.onload = loadCartItems;
+
+    // Function to handle checkout button click
+    function checkout() {
+        window.location.href = 'checkout.html'; // Redirect to the checkout page
+    }
+</script>
+
+</body>
+</html>
