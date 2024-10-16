@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot - Greenguard</title>
+    <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Chatbot Styling */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .chatbot-header {
+            background-color: #28a745;
+            padding: 10px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chatbot-body {
+            background-color: #f4f7f6;
+            height: 400px;
+            padding: 10px;
+            overflow-y: scroll;
+        }
+
+        .chatbot-footer {
+            display: flex;
+            padding: 10px;
+            background-color: #f4f7f6;
+        }
+
+        .chatbot-footer input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .chatbot-footer button {
+            width: 20%;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 5px;
+        }
+
+        .chatbot-footer button:hover {
+            background-color: #218838;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background-color: #28a745;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+    </style>
+    <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light navbar-custom ">
+    <div class="container-fluid">
+      <img src="./assests/logo.jpeg" alt="" width="30px" height="30px" style="border-radius: 10rem;">
+      <a class="navbar-brand" href="#">THINK GREEN LIVE GREEN</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#services">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./complaint.html">Complaints</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./dashboard.html">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Details</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</head>
+<body>
+
+    <!-- Chatbot UI -->
+    <div class="chatbot-container">
+        <div class="chatbot-header">
+            Greenguard Chatbot
+        </div>
+        <div class="chatbot-body" id="chat-body">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="chatbot-footer">
+            <input type="text" id="user-input" placeholder="Ask me anything...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to send user message
+        function sendMessage() {
+            const userInput = document.getElementById("user-input").value;
+            if (userInput.trim() === "") return; // Skip empty messages
+
+            // Add user message to chat
+            const chatBody = document.getElementById("chat-body");
+            const userMessage = document.createElement("div");
+            userMessage.className = "message user-message";
+            userMessage.innerText = userInput;
+            chatBody.appendChild(userMessage);
+
+            // Scroll chat body to the bottom
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // Generate bot response using an external API
+            generateResponse(userInput);
+
+            // Clear input field
+            document.getElementById("user-input").value = "";
+        }
+
+        // Function to generate bot response via API call
+        async function generateResponse(userInput) {
+            const chatBody = document.getElementById("chat-body");
+            const botMessage = document.createElement("div");
+            botMessage.className = "message bot-message";
+            
+            // Show loading message while fetching response
+            botMessage.innerText = "Typing...";
+            chatBody.appendChild(botMessage);
+
+            // Scroll chat body to the bottom
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            try {
+                // API call to OpenAI or any other NLP-based service
+                const response = await fetch('https://api.openai.com/v1/engines/davinci/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer YOUR_API_KEY' // Replace with your API key
+                    },
+                    body: JSON.stringify({
+                        prompt: userInput,
+                        max_tokens: 150
+                    })
+                });
+
+                const data = await response.json();
+                botMessage.innerText = data.choices[0].text.trim(); // Display the bot's response
+            } catch (error) {
+                botMessage.innerText = "Sorry, something went wrong. Please try again.";
+            }
+
+            // Scroll chat body to the bottom
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+    </script>
+
+</body>
+</html>

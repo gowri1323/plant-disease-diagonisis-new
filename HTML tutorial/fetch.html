@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Detector</title>
+</head>
+<body>
+    <h1>Upload an Image</h1>
+    <input type="file" id="imageInput" accept="image/*">
+    <button id="uploadButton">Upload</button>
+
+    <h2>Response</h2>
+    <pre id="responseOutput"></pre>
+
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', () => {
+            const imageInput = document.getElementById('imageInput');
+            const file = imageInput.files[0];
+
+            if (!file) {
+                alert("Please select an image.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append("image", file);
+            formData.append("input_text", ""); // Optional input text
+
+            fetch("http://127.0.0.1:5000/analyze", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('responseOutput').innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        });
+    </script>
+</body>
+</html>
