@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog - GreenGuard</title>
-    <link rel="stylesheet" href="styles.css"> <!-- External stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- External stylesheet -->
 
     <style>
         /* General Body Styling */
@@ -187,11 +187,11 @@
 <!-- Header Section -->
 <header class="header" id="header">
     <div class="header-container">
-        <a href="index.html">Home</a>
-        <a href="explore.html">Explore</a>
-        <a href="service.html"> Help Centre</a>
-        <a href="blog.html">Blog</a>
-        <a href="login.html">Login</a>
+        <a href="/">Home</a>
+        <a href="/explore">Explore</a>
+        <a href="/service"> Help Centre</a>
+        <a href="/blog">Blog</a>
+        <a href="/login">Login</a>
    
     </div>
 </header>
@@ -209,28 +209,28 @@
     <div class="explore-container">
         <!-- Blog Post 1 -->
         <div class="explore-box">
-            <img src="./plant disease identify.jpg" alt="Blog Post 1">
+            <img src="{{ url_for('static', filename='img/plant disease identify.jpg') }}" alt="Blog Post 1">
             <h3>How to Identify Common Plant Diseases</h3>
             <p>Learn how to recognize the early signs of plant diseases to protect your crops.</p>
             <a href=" https://www.proflowers.com/blog/plant-diseases">Read More</a>
         </div>
         <!-- Blog Post 2 -->
         <div class="explore-box">
-            <img src="./asserts/female-gardener-spraying-insecticide-plant_23-2147918609.jpg" alt="Blog Post 2">
+            <img src="{{ url_for('static', filename='img/female-gardener-spraying-insecticide-plant_23-2147918609.jpg') }}" alt="Blog Post 2">
             <h3>Sustainable Pest Control Methods</h3>
             <p>Discover eco-friendly ways to manage pests without harming the environment.</p>
             <a href=" https://www.greenlivinginspiration.com/blog/sustainable-pest-control-natural-and-non-toxic-methods/">Read More</a>
         </div>
         <!-- Blog Post 3 -->
         <div class="explore-box">
-            <img src="./asserts/close-up-basket-vegetables_23-2148579742.jpg" alt="Blog Post 3">
+            <img src="{{ url_for('static', filename='img/close-up-basket-vegetables_23-2148579742.jpg') }}" alt="Blog Post 3">
             <h3>Benefits of Organic Farming</h3>
             <p>Find out how organic farming can improve soil health and the crop yield.</p>
             <a href="https://www.nimbusagrofarms.in/post/advantages-of-organic-farming">Read More</a>
         </div>
         <!-- Blog Post 4 -->
         <div class="explore-box">
-            <img src="./asserts/watering.jpg" alt="Blog Post 4">
+            <img src="{{ url_for('static', filename='img/watering.jpg') }}" alt="Blog Post 4">
             <h3>Water Conservation Tips for Agriculture</h3>
             <p>Learn how to save water while maintaining healthy plants and crops.</p>
             <a href="https://www.green.earth/blog/10-agricultural-techniques-for-water-conservation">Read More</a>

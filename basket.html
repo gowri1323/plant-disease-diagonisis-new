@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Cart</title>
-    <link rel="stylesheet" href="styles.css"> <!-- External stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- External stylesheet -->
     <style>
         body {
             background-color: #eef5e9;
             font-family: 'Poppins', sans-serif;
             margin: 0;
+            padding: 20px;
         }
 
         h1 {
@@ -37,52 +38,70 @@
 
         .cart-item img {
             width: 100px;
-            height: auto;
+            height: 100px;
+            object-fit: cover;
             border-radius: 10px;
         }
 
         .cart-item h3 {
             color: #28a745;
             font-size: 18px;
+            margin: 0 10px;
+            flex-grow: 1;
         }
 
         .cart-item .price {
             font-size: 20px;
             font-weight: bold;
             color: #28a745;
+            margin-right: 10px;
         }
 
-        .checkout-button {
+        .cart-item .quantity {
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-item .quantity button {
             background-color: #28a745;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
+            padding: 5px 10px;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            margin-top: 20px;
+            margin: 0 5px;
         }
 
-        .checkout-button:hover {
+        .cart-item .quantity span {
+            font-size: 18px;
+            margin: 0 10px;
+        }
+
+        .checkout-button, .button-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            border: none;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .checkout-button:hover, .button-link:hover {
             background-color: #218838;
         }
-        .button-link {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #57ae61; /* Button background color */
-    color: white; /* Text color */
-    text-align: center;
-    text-decoration: none;
-    border-radius: 25px; /* Rounded corners */
-    font-size: 16px; /* Font size */
-    transition: background-color 0.3s ease; /* Smooth hover effect */
-    border: none;
-    margin-top: 20px;
-}
-    .button-link:hover{
-        background-color:#acc8b4;
-        cursor:pointer
-    }
+
+        .total {
+            text-align: right;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -92,68 +111,64 @@
 <div class="cart-container" id="cartContainer">
     <!-- Cart items will be dynamically inserted here -->
 </div>
+
+<div class="total" id="cartTotal"></div>
+
 <center>
-<button class="checkout-button" onclick="checkout()">Proceed to Checkout</button>
-
-
-<div class="back-link">
-    <a href="cart.html"class="button-link">Back to store</a>
-</div>
-</div>
+    <button class="checkout-button" onclick="checkout()">Proceed to Checkout</button>
+    <a href="/cart" class="button-link">Back to Store</a>
 </center>
+
 <script>
-    // Function to load cart items from localStorage and display them
     function loadCartItems() {
-        // Sample data - you can change the product details as needed
-        const sampleCartItems = [
-            {
-                name: "DAP Fertilizer And Potash Fertilizer (MOP)",
-                price: 189.00,
-                image: "https://via.placeholder.com/100" // Placeholder image URL
-            },
-            {
-                name: "Phosphate Solubilizing Bacteria Bio Fertilizer",
-                price: 499.00,
-                image: "https://via.placeholder.com/100" // Placeholder image URL
-            },
-            {
-                name: "Organic Neem Cake Fertilizer",
-                price: 350.00,
-                image: "https://via.placeholder.com/100" // Placeholder image URL
-            }
-        ];
-
-        // Store sample data in localStorage for the first time
-        if (!localStorage.getItem('cart')) {
-            localStorage.setItem('cart', JSON.stringify(sampleCartItems));
-        }
-
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         const cartContainer = document.getElementById('cartContainer');
+        const cartTotal = document.getElementById('cartTotal');
         
+        cartContainer.innerHTML = '';
+        let total = 0;
+
         if (cart.length === 0) {
             cartContainer.innerHTML = '<p>Your cart is empty.</p>';
         } else {
-            cart.forEach(item => {
+            cart.forEach((item, index) => {
                 const cartItem = `
                     <div class="cart-item">
-                        <img src="${item.image}" alt="${item.name}">
+                        <img src="/static/img/${item.image}" alt="${item.name}">
                         <h3>${item.name}</h3>
                         <div class="price">Rs. ${item.price.toFixed(2)}</div>
+                        <div class="quantity">
+                            <button onclick="updateQuantity(${index}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity(${index}, 1)">+</button>
+                        </div>
                     </div>
                 `;
                 cartContainer.innerHTML += cartItem;
+                total += item.price * item.quantity;
             });
         }
+
+        cartTotal.innerHTML = `Total: Rs. ${total.toFixed(2)}`;
     }
 
-    // Call the function to load cart items on page load
-    window.onload = loadCartItems;
+    function updateQuantity(index, change) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart[index].quantity += change;
+        
+        if (cart[index].quantity <= 0) {
+            cart.splice(index, 1);
+        }
 
-    // Function to handle checkout button click
+        localStorage.setItem('cart', JSON.stringify(cart));
+        loadCartItems();
+    }
+
     function checkout() {
-        window.location.href = 'checkout.html'; // Redirect to the checkout page
+        window.location.href = '/checkout';
     }
+
+    window.onload = loadCartItems;
 </script>
 
 </body>

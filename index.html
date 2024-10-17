@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index-GreenGuard</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
   
     <style>
@@ -238,11 +238,11 @@
 <!-- Navbar -->
 <header class="header" id="header">
     <div class="header-container">
-        <a href="index.html">Home</a>
-        <a href="explore.html">Explore</a>
-        <a href="service.html">Help Centre</a>
-        <a href="blog.html">Blog</a>
-        <a href="login.html">Login</a>
+        <a href="/">Home</a>
+        <a href="/explore">Explore</a>
+        <a href="/service">Help Centre</a>
+        <a href="/blog">Blog</a>
+        <a href="/login">Login</a>
   
     </div>
 </header>
@@ -257,7 +257,7 @@
 
         <!-- Logo Section -->
         <div class="logo-container">
-            <img src="./asserts/logo 1.jpg" alt="GreenGuard Logo"> <!-- Replace 'logo.png' with the path to your logo image -->
+            <img src="{{ url_for('static', filename='img/logo 1.jpg') }}" alt="GreenGuard Logo">
         </div>
 
         <!-- Quotes Section -->
@@ -269,15 +269,15 @@
         <h2>Testimonials & User Stories</h2>
         <div class="testimonial-container">
             <div class="testimonial">
-                <img src="./asserts/life saver.jpg" alt="User 1">
+                <img src="{{ url_for('static', filename='img/life saver.jpg') }}" alt="User 1">
                 <p>"Saved my crops just in time! GreenGuard is a life saver."</p>
             </div>
             <div class="testimonial">
-                <img src="./asserts/highly recommended.jpg" alt="User 2">
+                <img src="{{ url_for('static', filename='img/highly recommended.jpg') }}" alt="User 2">
                 <p>"The AI diagnosis is quick and accurate, highly recommend GreenGuard."</p>
             </div>
             <div class="testimonial">
-                <img src="./asserts/crop yield.jpg" alt="User 3">
+                <img src="{{ url_for('static', filename='img/crop yield.jpg') }}" alt="User 3">
                 <p>"GreenGuard helped me improve my crop yield. Thank you!"</p>
             </div>
         </div>
@@ -286,6 +286,7 @@
 <section class="search-section">
     <input type="text" id="searchQuery" placeholder="Search for plant diseases, pests, or prevention tips...">
     <button onclick="performSearch()">Search</button>
+    <div id="searchResults"></div>
 </section>
 
 <script>
@@ -293,7 +294,7 @@ function performSearch() {
     const query = document.getElementById('searchQuery').value;
     
     // Send search query to backend
-    fetch(/search?q=${query})
+    fetch(`/search?q=${query}`)
         .then(response => response.json())
         .then(data => {
             console.log(data); // Display results in the console
@@ -303,16 +304,19 @@ function performSearch() {
 }
 
 function displaySearchResults(results) {
-    const resultSection = document.createElement('section');
+    let resultSection = document.getElementById('searchResults');
+    if (!resultSection) {
+        resultSection = document.createElement('section');
+        resultSection.id = 'searchResults';
+        document.querySelector('.search-section').appendChild(resultSection);
+    }
     resultSection.innerHTML = ''; // Clear previous results
 
     results.forEach(result => {
         const resultItem = document.createElement('div');
-        resultItem.innerHTML = <h3>${result.name}</h3><p>${result.description}</p>;
+        resultItem.innerHTML = `<h3>${result.name}</h3><p>${result.description}</p>`;
         resultSection.appendChild(resultItem);
     });
-
-    document.body.appendChild(resultSection);
 }
 </script>
     

@@ -189,11 +189,11 @@
     <!-- Navbar -->
     <header class="header" id="header">
         <div class="header-container">
-            <a href="index.html">Home</a>
-            <a href="explore.html">Explore</a>
-            <a href="service.html">Help Centre</a>
-            <a href="blog.html">Blog</a>
-            <a href="login.html">Login</a>
+            <a href="/">Home</a>
+            <a href="/explore">Explore</a>
+            <a href="/service">Help Centre</a>
+            <a href="/blog">Blog</a>
+            <a href="/login">Login</a>
           
         </div>
     </header>
@@ -209,7 +209,7 @@
         <div class="explore-box">
             <div class="explore-inner">
                 <div class="explore-front">
-                    <img src="./asserts/crop doctor.jpg" alt="Early Detection Icon">
+                    <img src="{{ url_for('static', filename='img/crop doctor.jpg') }}" alt="Early Detection Icon">
                     <h3>Instant Crop Health Scan</h3>
                 </div>
                 <div class="explore-back">
@@ -223,12 +223,12 @@
         <div class="explore-box">
             <div class="explore-inner">
                 <div class="explore-front">
-                    <img src="./asserts/online store.avif" alt="AI Insights Icon">
+                    <img src="{{ url_for('static', filename='img/online store.avif') }}" alt="AI Insights Icon">
                     <h3>GreenGuard Online Store</h3>
                 </div>
                 <div class="explore-back">
                     <p>"Your crops deserve the best—shop sustainable solutions for a greener tomorrow!"</p>
-                    <a href="cart.html">Shopping Spree</a> <!-- Link to cart page -->
+                    <a href="/cart">Shopping Spree</a> <!-- Link to cart page -->
                 </div>
             </div>
         </div>
@@ -249,7 +249,7 @@
         // Handle Health Check button navigation to camera.html
         document.getElementById('healthCheckBtn').addEventListener('click', function(event) {
             event.preventDefault(); // Prevent default link behavior
-            window.location.href = 'camera.html'; // Navigate to the camera access page
+            window.location.href = '/analyze'; // Navigate to the camera access page
         });
     </script>
     

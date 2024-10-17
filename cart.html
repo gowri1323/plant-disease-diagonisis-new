@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GreenGuard Online Store</title>
-    <link rel="stylesheet" href="styles.css"> <!-- External stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -185,330 +185,118 @@
 <!-- Header Section -->
 <header class="header" id="header">
     <div class="header-container">
-        <a href="index.html">Home</a>
-        <a href="explore.html">Explore</a>
-        <a href="service.html">Help Centre</a>
-        <a href="blog.html">Blog</a>
-        <a href="login.html">Login</a>
+        <a href="/">Home</a>
+        <a href="/explore">Explore</a>
+        <a href="/service">Help Centre</a>
+        <a href="/blog">Blog</a>
+        <a href="/login">Login</a>
     
     </div>
 </header>
 
-<h1>GreenGuard Online Store</h1>
-<div class="navbar">
-    <a href="basket.html" id="cart-icon">
-       <i class="fas fa-shopping-cart"></i>
-    </a>
- </div>
- <div class="back-link">
-    <a href="explore.html" class="icon-link">
-        <i class="fas fa-arrow-left"></i> <!-- Font Awesome icon -->
-    </a>
-</div>
-
- 
-<!-- Product Container -->
-<div class="product-container">
-    <!-- Product Example -->
-    <div class="product-card">
-        <img src="./dap.jpg" alt="Fertilizer 1">
-        <h3>DAP Fertilizer And Potash Fertilizer (MOP)</h3>
-        <div class="price">Rs. 189.00</div>
-        <button onclick="addToCart()">Add to Cart</button>
+    <h1>GreenGuard Online Store</h1>
+    <div class="navbar">
+        <a href="{{ url_for('basket') }}" id="cart-icon">
+           <i class="fas fa-shopping-cart"></i>
+        </a>
     </div>
-     <!-- Product 2 -->
-     <div class="product-card">
-        <img src="./asserts/pro2.webp" alt="Fertilizer 2">
-        <h3>Phosphate Solubilizing Bacteria Bio Fertilizer </h3>
-        
-        <div class="price">Rs.499</div>
-        <button onclick="addToCart()">Add to Cart</button>
+    <div class="back-link">
+        <a href="{{ url_for('explore') }}" class="icon-link">
+            <i class="fas fa-arrow-left"></i>
+        </a>
     </div>
 
-    <!-- Product 3 -->
-    <div class="product-card">
-        <img src="./pro3.webp" alt="Pesticide 3">
-        <h3>Zinc Solubiilizing Bacteria Bio Fertilizer </h3>
-         
-        <div class="price">Rs.499</div>
-        <button onclick="addToCart()">Add to Cart</button>
+    <!-- Product Container -->
+    <div class="product-container">
+        <!-- display the products here -->
+        {% for product in products %}
+        <div class="product-card" 
+             data-id="{{ product.id }}" 
+             data-name="{{ product.name }}" 
+             data-price="{{ product.price }}" 
+             data-image="{{ url_for('static', filename='img/' + product.image) }}">
+            <img src="{{ url_for('static', filename='img/' + product.image) }}" alt="{{ product.name }}">
+            <h3>{{ product.name }}</h3>
+            <div class="price">Rs. {{ product.price }}</div>
+            <button onclick="addToCart(this)">Add to Cart</button>
+        </div>
+        {% endfor %}
     </div>
 
-    <!-- Product 4 -->
-    <div class="product-card">
-        <img src="./pro4.webp" alt="Pesticide 4">
-        <h3> Sulphur & Iron Bacteria Bio Fertilizer </h3>
-        
-        <div class="price">Rs.499</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-    <div class="product-card">
-        <img src="./asserts/pro5.webp" alt="Fertilizer 5">
-        <h3>Acetobacter Nitrogen Fixing Bio Fertilizer </h3>
-        <div class="price">Rs.499</div>
-        <button onclick="addToCart()">Add to Cart</button>
+    <!-- Modal for Cart Confirmation -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <h4>Product added to cart</h4>
+            <button onclick="goToCart()">Cart</button>
+            <button onclick="buyNow()">Buy Now</button>
+            <button onclick="closeModal()">Continue Shopping</button>
+        </div>
     </div>
 
-    <!-- Product 2 -->
-    <div class="product-card">
-        <img src="./pro6.webp" alt="Fertilizer 6">
-        <h3> Calcium Nitrate (Granules) Fertilizer + 18% Calcium  </h3>
-        
-        <div class="price">Rs.279</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
+    <script>
+    // read the json file from static/json/products.json
+    let products = [];
+    fetch('/static/json/products.json')
+        .then(response => response.json())
+        .then(data => {
+            products = data;
+            const productContainer = document.querySelector('.product-container');
+            productContainer.innerHTML = ''; // Clear existing content
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <img src="/static/img/${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <div class="price">Rs. ${product.price.toFixed(2)}</div>
+                    <button onclick="addToCart(${product.id})">Add to Cart</button>
+                `;
+                productContainer.appendChild(productCard);
+            });
+        });
 
-    <!-- Product 3 -->
-    <div class="product-card">
-        <img src="./pro7.jpg" alt="Pesticide 7">
-        <h3>Potassium Humate Organic Liquid Fertilizer (900 ML) </h3>
-        <div class="price">Rs.579</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
+    function addToCart(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
 
-    <!-- Product 4 -->
-    <div class="product-card">
-        <img src="./asserts/pro8.webp" alt="Pesticide 8">
-        <h3>Super Zinc Sulphate Micronutrient Fertilizer (250 gms)</h3>
-        <div class="price">Rs.259</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-     <!-- Product 1 -->
-     <div class="product-card">
-        <img src="./asserts/pro9.webp" alt="Fertilizer 9">
-        <h3>Ammonium Sulphate Fertilizer (100 g)100% Water Soluble Fertilizer</h3>
-        <div class="price">Rs.249</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 2 -->
-    <div class="product-card">
-        <img src="./asserts/pro10.webp" alt="Fertilizer 10">
-        <h3>Ammonium Sulphate Fertilizer Powder (5 kg Bag) </h3>
-        <div class="price">Rs.999</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 3 -->
-    <div class="product-card">
-        <img src="./asserts/pro11.webp" alt="Pesticide 11">
-        <h3>
-            Humic Acid & Seaweed Extract Root Food (10 x 250 gms)</h3>
-        <div class="price">Rs.599</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 4 -->
-    <div class="product-card">
-        <img src="./asserts/pro12.webp" alt="Pesticide 12">
-        <h3>
-            Foliar Liquid Fertilizer- Primary, Secondary & Micro nutrients </h3>
- 
-        <div class="price">Rs.599</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-    <div class="product-card">
-        <img src="./asserts/pro13.webp" alt="Fertilizer 13">
-        <h3>IMIDA 30.5 Insecticide </h3>
-        <div class="price">Rs.829</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 2 -->
-    <div class="product-card">
-        <img src="./asserts/pro14.webp" alt="Fertilizer 14">
-        <h3>VBM- Bio Insecticide </h3>
-        <div class="price">Rs.1849</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 3 -->
-    <div class="product-card">
-        <img src="./asserts/pro15.webp" alt="Pesticide 15">
-        <h3> Contact Insecticide </h3>
-        <div class="price">Rs.533</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 4 -->
-
-    <div class="product-card">
-        <img src="./asserts/pro16.webp" alt="Pesticide 16">
-        <h3>Geolife Nano Fe </h3>
-        <div class="price">Rs.180</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-     <!-- Product 1 -->
-     <div class="product-card">
-        <img src="./asserts/pro17.webp" alt="Fertilizer 17">
-        <h3>Rose Fertilizer- 850gm </h3>
-        <div class="price">Rs.589</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-     <!-- Product 3 -->
-     <div class="product-card">
-        <img src="./asserts/p19.webp" alt="Pesticide 18">
-        <h3>Vermicompost- 850gm </h3>
-        <div class="price">Rs.499</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 2 -->
-    <div class="product-card">
-        <img src="./asserts/p18.webp" alt="Fertilizer 19">
-        <h3>Neem Cake Powder Fertilizer </h3>
-        <div class="price">Rs.579</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-   
-
-    <!-- Product 4 -->
-    <div class="product-card">
-        <img src="./asserts/p20.webp" alt="Pesticide 20">
-        <h3>Amipro-Immunity Booster Nitrogen Supplement </h3>
-        <div class="price">Rs.410</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-    <div class="product-card">
-        <img src="./asserts/p21.webp" alt="Fertilizer 21">
-        <h3>Retain Humic Acid Granuls|Shiny Granules</h3>
-        <div class="price">Rs.499</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 2 -->
-    <div class="product-card">
-        <img src="./asserts/p22.webp" alt="Fertilizer 22">
-        <h3>Gibrax Phytozyme(Seaweed) </h3>
-        <div class="price">Rs.840</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 3 -->
-    <div class="product-card">
-        <img src="./asserts/P23.webp" alt="Pesticide 1">
-        <h3>Neem Khali Cake (Organic) </h3>
-        <div class="price">RS.189</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 4 -->
-    <div class="product-card">
-        <img src="./asserts/p24.webp" alt="Pesticide 2">
-        <h3>Smart Plant Protector(pest Controller) </h3>
-        <div class="price">Rs.599</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-     <!-- Product 1 -->
-     <div class="product-card">
-        <img src="./asserts/p25.webp" alt="Fertilizer 1">
-        <h3>Pyramid (Acetamaprid 20% SP) </h3>
-        <div class="price">Rs.250</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 2 -->
-    <div class="product-card">
-        <img src="./asserts/p26.webp" alt="Fertilizer 2">
-        <h3>
-            3-in-1 Natural Pest Control-katayani </h3>
-        <div class="price">Rs.369</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 3 -->
-    <div class="product-card">
-        <img src="./asserts/p27.webp" alt="Pesticide 1">
-        <h3>Cold Pressed Water-Soluble Neem Oil EC </h3>
-        <div class="price">Rs.399</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 4 -->
-    <div class="product-card">
-        <img src="./asserts/p28.webp" alt="Pesticide 2">
-        <h3>
-            Commander (Emamectin Benzoate) </h3>
-        <div class="price">Rs.400</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-    <div class="product-card">
-        <img src="./asserts/p29.webp" alt="Fertilizer 1">
-        <h3>Neem Oil Pest Repellent Spray </h3>
-        <div class="price">Rs.289</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-
-    <!-- Product 2 -->
-    <div class="product-card">
-        <img src="./asserts/p30.webp" alt="Fertilizer 2">
-        <h3>
-            Magic FungiX Organic Fungus Controller (200 Grams) </h3>
-        <div class="price">Rs.380</div>
-        <button onclick="addToCart()">Add to Cart</button>
-    </div>
-</div>
-
-<!-- Modal for Cart Confirmation -->
-<div id="cartModal" class="modal">
-    <div class="modal-content">
-        <h4>Product added to cart</h4>
-        <button onclick="goToCart()">Cart</button>
-        <button onclick="buyNow()">Buy Now</button>
-        <button onclick="closeModal()">Continue Shopping</button>
-    </div>
-</div>
-<script>
-    document.getElementById('cart-icon').addEventListener('click', function(event) {
-   // Check if the cart is empty (optional logic)
-   if (cartIsEmpty()) {
-      alert('Your cart is empty!');
-      event.preventDefault(); // Prevent redirection if the cart is empty
-   }
-});
-
-function cartIsEmpty() {
-   // Implement your logic to check if the cart is empty
-   return false; // Example: return true if the cart is empty
-}
-    // Function to handle "Add to Cart" button click
-    function addToCart() {
-        const product = {
-            name: 'DAP Fertilizer And Potash Fertilizer (MOP)', // You can dynamically set this
-            price: 189.00, // You can dynamically set this
-            image: './dap.jpg' // You can dynamically set this
-        };
-
-        // Retrieve current cart from localStorage or initialize an empty cart
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingProductIndex = cart.findIndex(item => item.id === product.id);
 
-        // Add the new product to the cart
-        cart.push(product);
+        if (existingProductIndex !== -1) {
+            cart[existingProductIndex].quantity += 1;
+        } else {
+            cart.push({...product, quantity: 1});
+        }
 
-        // Store the updated cart in localStorage
         localStorage.setItem('cart', JSON.stringify(cart));
-
-        // Show the modal to confirm the product was added
         document.getElementById('cartModal').style.display = 'block';
+        updateCartIcon();
     }
 
-    // Function to close the modal
+    function updateCartIcon() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const cartIcon = document.getElementById('cart-icon');
+        if (cartIcon) {
+            cartIcon.setAttribute('data-count', totalItems);
+        }
+    }
+
     function closeModal() {
         document.getElementById('cartModal').style.display = 'none';
     }
 
-    // Function to redirect to the cart page
     function goToCart() {
-        window.location.href = 'basket.html'; // Replace with your cart page URL
+        window.location.href = '/basket';
+        
     }
 
-    // Function to redirect to the buy now page
     function buyNow() {
-        window.location.href = 'checkout.html'; // Replace with your checkout page URL
+        window.location.href = '/checkout';
     }
 
-    // Sticky Header Scroll Effect
+    document.addEventListener('DOMContentLoaded', updateCartIcon);
+
     window.addEventListener('scroll', function() {
         const header = document.getElementById('header');
         if (window.scrollY > 50) {
@@ -517,8 +305,6 @@ function cartIsEmpty() {
             header.classList.remove('scrolled');
         }
     });
-</script>
-
-
+    </script>
 </body>
 </html>

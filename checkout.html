@@ -98,24 +98,9 @@
     <h2>Checkout</h2>
 
     <!-- Checkout Summary -->
-    <div class="checkout-summary">
+    <div class="checkout-summary" id="checkoutSummary">
         <h4>Order Summary</h4>
-        <div class="summary-item">
-            <span>Item 1: DAP Fertilizer And Potash Fertilizer (MOP)</span>
-            <span class="price">Rs. 189.00</span>
-        </div>
-        <div class="summary-item">
-            <span>Item 2: Phosphate Solubilizing Bacteria Bio Fertilizer</span>
-            <span class="price">Rs. 499.00</span>
-        </div>
-        <div class="summary-item">
-            <span>Item 2:Organic Neem Cake Fertilizer  </span>
-            <span class="price">Rs. 350.00</span>
-        </div>
-        <div class="summary-item">
-            <strong>Total</strong>
-            <strong class="price">Rs. 1038.00</strong>
-        </div>
+        <!-- Dynamic content will be inserted here -->
     </div>
 
     <!-- Shipping Information Form -->
@@ -160,23 +145,57 @@
 
     <!-- Back to Cart Link -->
     <div class="back-link">
-        <a href="cart.html">Back to store</a>
+        <a href="/cart">Back to store</a>
     </div>
 </div>
 
 <script>
-    // JavaScript to handle form submission and display popup
+    function loadCartItems() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const checkoutSummary = document.getElementById('checkoutSummary');
+        
+        let summaryHTML = '<h4>Order Summary</h4>';
+        let total = 0;
+
+        if (cart.length === 0) {
+            summaryHTML += '<p>Your cart is empty.</p>';
+        } else {
+            cart.forEach(item => {
+                summaryHTML += `
+                    <div class="summary-item">
+                        <span>${item.name} (x${item.quantity})</span>
+                        <span class="price">Rs. ${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                `;
+                total += item.price * item.quantity;
+            });
+        }
+
+        summaryHTML += `
+            <div class="summary-item">
+                <strong>Total</strong>
+                <strong class="price">Rs. ${total.toFixed(2)}</strong>
+            </div>
+        `;
+
+        checkoutSummary.innerHTML = summaryHTML;
+    }
+
+    // Load cart items when the page loads
+    window.onload = loadCartItems;
+
+    // Handle form submission
     document.getElementById('checkoutForm').addEventListener('submit', function(event) {
         event.preventDefault();  // Prevent the default form submission
 
         // Display the popup message
         alert('Thank you for your order!');
 
-        // Optionally, you can also clear the cart after placing the order
-        localStorage.removeItem('cart'); // Clear the cart in localStorage
+        // Clear the cart in localStorage
+        localStorage.removeItem('cart');
 
-        // Redirect to a confirmation page or another page (optional)
-        window.location.href = 'confirmation.html';  // Redirect to confirmation page
+        // Redirect to a confirmation page
+        window.location.href = '/confirmation';
     });
 </script>
 

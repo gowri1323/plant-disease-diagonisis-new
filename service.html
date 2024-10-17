@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service - GreenGuard</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Link to your stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> <!-- Link to your stylesheet -->
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -72,7 +72,7 @@
         .services {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 50px;
+            gap: 40px;
             padding: 40px;
             max-width: 1000px;
             margin: 0 auto;
@@ -92,8 +92,8 @@
         }
 
         .service-card img {
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             margin-bottom: 15px;
         }
 
@@ -288,11 +288,11 @@
 <!-- Header Section (from Blog Page) -->
 <header class="header" id="header">
     <div class="header-container">
-        <a href="index.html">Home</a>
-        <a href="explore.html">Explore</a>
-        <a href="service.html"> Help Centre</a>
-        <a href="blog.html">Blog</a>
-        <a href="login.html">Login</a>
+        <a href="/">Home</a>
+        <a href="/explore">Explore</a>
+        <a href="/service"> Help Centre</a>
+        <a href="/blog">Blog</a>
+        <a href="/login">Login</a>
        
     </div>
 </header>
@@ -311,12 +311,12 @@
         <div class="explore-box">
             <div class="explore-inner">
                 <div class="explore-front">
-                    <img src=" ./asserts/image diagonsis.jpg" alt="Early Detection Icon">
+                    <img src="{{ url_for('static', filename='img/image diagonsis.jpg') }}" alt="Early Detection Icon">
                     <h3> Plant Disease Diagnosis</h3>
                 </div>
                 <div class="explore-back">
                     <p>" Accurately detect plant diseases using our AI-powered diagnostic tools."</p>
-                    <a href="diagnosis.html"> view</a>
+                    <a href="/diagnosis"> view</a>
                 </div>
             </div>
         </div>
@@ -325,16 +325,15 @@
         <div class="explore-box">
             <div class="explore-inner">
                 <div class="explore-front">
-                    <img src=" ./asserts/crop advisor.jpg"" alt="AI Insights Icon">
+                    <img src="{{ url_for('static', filename='img/crop advisor.jpg') }}" alt="AI Insights Icon">
                     <h3>Crop Advisor</h3>
                 </div>
                 <div class="explore-back">
                     <p>" Receive expert advice on managing pests that may harm your plants."</p>
-                    <a href="pest-control.html"> view</a> <!-- Link to cart page -->
+                    <a href="/pest-control"> view</a> <!-- Link to cart page -->
                 </div>
             </div>
         </div>
-
     </div>
      
  
